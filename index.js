@@ -49,6 +49,63 @@ app.put("/api/users/:id", (req, res) => {
 });
 
 
+//3. The returned response from POST /api/users with form data username will be an object with username and _id properties
+
+app.get("/api/users", (req, res) => {
+  //TODO: get all users
+  res.json(users);
+});
+
+//4. You can make a GET request to /api/users to get a list of all users
+
+app.get("/api/users/:id", (req, res) => {
+  //TODO: get a single user by id
+  const { id } = req.params;
+  const user = users.find((user) => user.id === id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  res.json(user);
+});
+
+//5. The GET request to /api/users returns an array.
+
+app.post("/api/users/:id/exercises", (req, res) => {
+  //TODO: add exercise to a user by id
+  const { id } = req.params;
+  const user = users.find((user) => user.id === id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  const { description, duration, date } = req.body;
+  if (!description ||!duration ||!date) {
+    return res
+     .status(400)
+     .json({ error: "description, duration, and date are required" });
+  }
+  user.exercises.push({ description, duration, date });
+  res.json(user);
+});
+
+//6. Each element in the array returned from GET /api/users is an object literal containing a user's username and _id
+
+app.delete("/api/users/:id", (req, res) => {
+  //TODO: delete a user by id
+  const { id } = req.params;
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  users.splice(index, 1);
+  res.json({ message: "User deleted successfully" });
+});
+
+//7. You can POST to /api/users/:_id/exercises with form data description, duration, and optionally date. If no date is supplied, the current date will be used
+        
+
+
+
+
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {

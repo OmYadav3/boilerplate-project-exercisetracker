@@ -29,6 +29,27 @@ app.post("/api/users", (req, res) => {
 
 });
 
+//2. You can POST to /api/users with form data username to create a new user
+
+app.put("/api/users/:id", (req, res) => {
+  //TODO: update the user object
+  const { id } = req.params;
+  const { username } = req.body;
+  const user = users.find((user) => user.id === id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  if (!username) {
+    return res
+     .status(400)
+     .json({ error: "username are required" });
+  }
+  user.username = username;
+  res.json(user);
+});
+
+
+
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
